@@ -16,12 +16,14 @@
 // node structure
 typedef struct Node {
     int data;          // data in current node
+    struct Node *prev; // pointer to previous node
     struct Node *next; // pointer to next node
 } Node;
 
 // singly linked list structure
 typedef struct {
     Node *head;  // head of list
+    Node *tail;  // tail of list
     size_t size; // size of list
 } List;
 
@@ -35,6 +37,7 @@ bool list_remove_tail(List *list, int *value);
 bool list_is_empty(const List *list);
 size_t list_size(const List *list);
 void list_print(const List *list);
+void list_print_reverse(const List *list);
 
 /* driver function */
 int main(void) {
@@ -94,7 +97,9 @@ List *list_create(void) {
         return NULL;
 
     list->head = NULL;
+    list->tail = NULL;
     list->size = 0;
+
     return list;
 }
 
@@ -126,9 +131,15 @@ bool list_insert_head(List *list, int value) {
     if (!new_node)
         return false;
     new_node->data = value;
+    new_node->prev = NULL;
     new_node->next = list->head;
 
     // update list
+    if (list->head) {
+        list->head->prev = new_node;
+    } else {
+        list->tail = new_node;
+    }
     list->head = new_node;
     list->size++;
 
@@ -146,25 +157,23 @@ bool list_insert_tail(List *list, int value) {
     if (!new_node)
         return false;
     new_node->data = value;
+    new_node->prev = list->tail;
     new_node->next = NULL;
 
     // update list
-    if (!list->head) {
+    if (list->tail) {
+        list->tail->next = new_node;
+    } else { // list only has one node
         list->head = new_node;
-    } else {
-        // find tail node
-        Node *current = list->head;
-        while (current->next) {
-            current = current->next;
-        }
-        current->next = new_node;
     }
+
+    list->tail = new_node;
     list->size++;
 
     return true;
 }
 
-/* remove node at head of list */
+/* TODO: remove node at head of list */
 bool list_remove_head(List *list, int *value) {
     // check if list is valid and has a head node
     if (!list || !list->head)

@@ -44,6 +44,7 @@ int main(void) {
     List *list = list_create();
     if (!list) {
         fprintf(stderr, "Failed to create list\n");
+
         return 1;
     }
 
@@ -86,6 +87,7 @@ int main(void) {
     printf("\n");
 
     printf("SINGLY LINKED LIST PROGRAM COMPLETE\n");
+
     return 0;
 }
 
@@ -97,6 +99,7 @@ List *list_create(void) {
 
     list->head = NULL;
     list->size = 0;
+
     return list;
 }
 
