@@ -18,14 +18,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// node structure
+/* node structure */
 typedef struct Node {
     int data;          // data in current node
     struct Node *prev; // pointer to previous node
     struct Node *next; // pointer to next node
 } Node;
 
-// singly linked list structure
+/* singly linked list structure */
 typedef struct {
     Node *head;  // head of list
     Node *tail;  // tail of list
