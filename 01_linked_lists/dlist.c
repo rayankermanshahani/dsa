@@ -7,6 +7,11 @@
  *
  * space complexity: O(n)
  *
+ * practical considerations:
+ * - more memory overhead per node relative to singly linked lists
+ * - bidirectional traversal
+ * - simpler to remove a node given its address
+ *
  */
 
 #include <stdbool.h>
@@ -54,7 +59,8 @@ int main(void) {
     list_insert_head(list, 1);
     list_insert_tail(list, 3);
     list_insert_tail(list, 7);
-    list_print(list); // expect: 1 -> 3 -> 3 -> 7 -> NULL
+    list_print(list);         // expect: NULL <-> 1 <-> 3 <-> 3 <-> 7 <-> NULL
+    list_print_reverse(list); // expect: NULL <-> 7 <-> 3 <-> 3 <-> 1 <-> NULL
     printf("\n");
 
     // remove nodes
@@ -63,14 +69,16 @@ int main(void) {
     if (list_remove_head(list, &value)) {
         printf("Removed head from list: %d\n", value);
     }
-    list_print(list); // expect: 3 -> 3 -> 7 -> NULL
+    list_print(list);         // expect: NULL <-> 3 <-> 3 <-> 7 <-> NULL
+    list_print_reverse(list); // expect: NULL <-> 7 <-> 3 <-> 3 <-> NULL
     printf("\n");
 
     printf("Removing tail node...\n");
     if (list_remove_tail(list, &value)) {
         printf("Removed tail from list: %d\n", value);
     }
-    list_print(list); // expect: 3 -> 3 -> NULL
+    list_print(list);         // expect: NULL <-> 3 <-> 3 <-> NULL
+    list_print_reverse(list); // expect: NULL <-> 3 <-> 3 <-> NULL
     printf("\n");
 
     printf("Checking if list is empty...\n");
@@ -86,7 +94,7 @@ int main(void) {
     printf("List destroyed.\n");
     printf("\n");
 
-    printf("SINGLY LINKED LIST PROGRAM COMPLETE\n");
+    printf("DOUBLY LINKED LIST PROGRAM COMPLETE\n");
     return 0;
 }
 
@@ -140,6 +148,7 @@ bool list_insert_head(List *list, int value) {
     } else {
         list->tail = new_node;
     }
+
     list->head = new_node;
     list->size++;
 
@@ -163,7 +172,7 @@ bool list_insert_tail(List *list, int value) {
     // update list
     if (list->tail) {
         list->tail->next = new_node;
-    } else { // list only has one node
+    } else { // list only had one node
         list->head = new_node;
     }
 
@@ -173,7 +182,7 @@ bool list_insert_tail(List *list, int value) {
     return true;
 }
 
-/* TODO: remove node at head of list */
+/* remove node at head of list */
 bool list_remove_head(List *list, int *value) {
     // check if list is valid and has a head node
     if (!list || !list->head)
@@ -185,6 +194,12 @@ bool list_remove_head(List *list, int *value) {
 
     // update list
     list->head = old_head->next;
+    if (list->head) {
+        list->head->prev = NULL;
+    } else { // list only had one node
+        list->tail = NULL;
+    }
+
     free(old_head);
     list->size--;
 
@@ -193,30 +208,23 @@ bool list_remove_head(List *list, int *value) {
 
 /* remove node at tail of list */
 bool list_remove_tail(List *list, int *value) {
-    // check if list is valid and has a head node
-    if (!list || !list->head)
+    // check if list is valid and has a tail node
+    if (!list || !list->tail)
         return false;
 
-    // there is only one node in list (ie. head is tail)
-    if (!list->head->next) {
-        *value = list->head->data;
-        // update list
-        free(list->head);
-        list->head = NULL;
-        list->size--;
-
-        return true;
-    }
-
-    // find tail node
-    Node *current = list->head;
-    while (current->next->next)
-        current = current->next;
+    // get old tail's data
+    Node *old_tail = list->tail;
+    *value = old_tail->data;
 
     // update list
-    *value = current->next->data;
-    free(current->next);
-    current->next = NULL;
+    list->tail = old_tail->prev;
+    if (list->tail) {
+        list->tail->next = NULL;
+    } else { // list only had one node
+        list->head = NULL;
+    }
+
+    free(old_tail);
     list->size--;
 
     return true;
@@ -236,10 +244,28 @@ void list_print(const List *list) {
 
     // iterate and print every node in list
     printf("List [size=%zu]:\n", list->size);
+    printf("NULL <-> ");
     Node *current = list->head;
     while (current) {
-        printf("%d -> ", current->data);
+        printf("%d <-> ", current->data);
         current = current->next;
+    }
+    printf("NULL\n");
+}
+
+/* print entire list in reverse */
+void list_print_reverse(const List *list) {
+    // check if list is valid
+    if (!list)
+        return;
+
+    // iterate backwards and print every node in list
+    printf("List Reverse [size=%zu]:\n", list->size);
+    printf("NULL <-> ");
+    Node *current = list->tail;
+    while (current) {
+        printf("%d <-> ", current->data);
+        current = current->prev;
     }
     printf("NULL\n");
 }

@@ -9,6 +9,11 @@
  *
  * space complexity: O(n)
  *
+ * practical considerations:
+ * - simple implementation
+ * - no backward traversal
+ * - inefficent tail operations
+ *
  */
 
 #include <stdbool.h>
