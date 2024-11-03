@@ -49,7 +49,6 @@ int main(void) {
     List *list = list_create();
     if (!list) {
         fprintf(stderr, "Failed to create list\n");
-
         return 1;
     }
 
