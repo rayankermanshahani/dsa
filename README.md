@@ -1,6 +1,6 @@
 # Data Structures and Algorithms (DSA)
 
-The following is a list of the data structures and algorithms implemented from scratch in C within this repository.
+The following is a list of the data structures and algorithms implemented from scratch in C++.
 
 Data Structures:
 - dynamic arrays
