@@ -2,7 +2,7 @@
 CC := g++
 
 # compiler flags
-CC_FLAGS := -O3 -Wall -Wextra
+CC_FLAGS := -O3 -Wall -Wextra -std=c++17
 
 # build directory
 BUILD_DIR := build
@@ -13,6 +13,9 @@ SRCS := $(wildcard *.cpp)
 # executables
 EXECS := $(SRCS:%.cpp=$(BUILD_DIR)/%)
 
+# header files
+HDRS := $(wildcard *.hpp)
+
 # default target
 all: $(BUILD_DIR) $(EXECS)
 
@@ -21,7 +24,7 @@ $(BUILD_DIR):
 	mkdir -p $@
 
 # rule to create executables
-$(BUILD_DIR)/%: %.cpp
+$(BUILD_DIR)/%: %.cpp $(HDRS)
 	$(CC) $(CC_FLAGS) $< -o $@
 
 # clean target
