@@ -1,8 +1,7 @@
 /**
  * darray.cpp
  *
- * A minimal, cache-friendly dynamic array implementation with manual memory
- * management and zero dependencies.
+ * A dynamic array implementation.
  */
 
 #include "testing.hpp"
@@ -249,6 +248,7 @@ int main(void) {
   std::cout << "\n" << std::string(50, '=') << std::endl;
   std::cout << "Dynamic array program is complete." << std::endl;
   std::cout << "" << std::string(50, '=') << std::endl;
+  std::cout << std::endl;
 
   return 0;
 }
