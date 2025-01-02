@@ -1,8 +1,7 @@
 /**
- * darray.cpp
+ * dll.cpp
  *
- * A minimal, cache-friendly dynamic array implementation with manual memory
- * management and zero dependencies.
+ * A doubly-linked list implementation.
  */
 
 #include "testing.hpp"
@@ -15,8 +14,8 @@ template <typename T> struct Node {
 };
 
 // initialize new node
-template <typename T> Node<T> node_create(T data) {
-  Node<T> new_node = new Node<T>;
+template <typename T> Node<T>* node_create(T data) {
+  Node<T>* new_node = new Node<T>;
   if (!new_node) {
     std::cerr << "Memory allocation failed\n";
     exit(EXIT_FAILURE);
@@ -28,15 +27,15 @@ template <typename T> Node<T> node_create(T data) {
 }
 
 // add node to head of list
-template <typename T> Node<T> prepend(Node<T>* head, T data) {
+template <typename T> Node<T>* prepend(Node<T>* head, T data) {
   Node<T> new_node = node_create(data);
-  new_node.next = head;
+  new_node->next = head;
 
   return new_node;
 }
 
 // add node to tail of list
-template <typename T> Node<T> append(Node<T>* head, T data) {
+template <typename T> Node<T>* append(Node<T>* head, T data) {
   if (!head) { // list is empty (no head)
     return create_node(data);
   }
@@ -100,12 +99,19 @@ template <typename T> void free_list(Node<T>* head) {
 // driver program
 int main(void) {
   // test suite
-  test::TestSuite suite("");
+  test::TestSuite suite("Doubly-Linked List Tests");
+
+  // run all tests
+  suite.run();
 
   // benchmarks
+  test::Benchmark bench("Doubly-Linked List Benchmarks");
+
+  // run all benchmarks
+  bench.run();
 
   std::cout << "\n" << std::string(50, '=') << std::endl;
-  std::cout << "Singly-linked list program is complete." << std::endl;
+  std::cout << "Doubly-linked list program is complete." << std::endl;
   std::cout << "" << std::string(50, '=') << std::endl;
 
   return 0;
